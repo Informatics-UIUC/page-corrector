@@ -1,11 +1,20 @@
 lazy val commonSettings = Seq(
-  organization := "edu.tamu.idhmc",
+  organization := "edu.tamu.emop",
   organizationName := "Early Modern OCR Project",
   organizationHomepage := Some(url("http://emop.tamu.edu")),
   startYear := Some(2012),
   licenses += "Apache2" -> url("http://www.apache.org/licenses/LICENSE-2.0"),
   scalaVersion := "2.11.6",
-  scalacOptions ++= Seq("-feature", "-language:postfixOps", "-target:jvm-1.7")
+  scalacOptions ++= Seq("-feature", "-language:postfixOps", "-target:jvm-1.7"),
+  resolvers += "I3 Repository" at "http://nexus.htrc.illinois.edu/content/groups/public",
+  publishTo := {
+    val nexus = "https://nexus.htrc.illinois.edu/"
+    if (version.value.trim.endsWith("SNAPSHOT"))
+      Some("HTRC Snapshots Repository" at nexus + "content/repositories/snapshots")
+    else
+      Some("HTRC Releases Repository"  at nexus + "content/repositories/releases")
+  },
+  credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 )
 
 lazy val `page-corrector` = (project in file(".")).
@@ -20,10 +29,10 @@ lazy val `page-corrector` = (project in file(".")).
         "mysql"                         %  "mysql-connector-java"   % "5.1.34",
         "org.xerial"                    %  "sqlite-jdbc"            % "3.8.7",
         "com.jolbox"                    %  "bonecp"                 % "0.8.0.RELEASE",
-        // "edu.illinois.i3.spellcheck"    %  "Jazzy"                  % "1.4-0.5.2",
+        "edu.illinois.i3.spellcheck"    %  "Jazzy"                  % "1.4-0.5.2",
         "net.liftweb"                   %% "lift-json"              % "2.6",
         "com.jsuereth"                  %% "scala-arm"              % "1.4",
-        // "edu.illinois.i3.scala"         %% "scala-utils"            % "20150130.1-SNAPSHOT",
+        "edu.illinois.i3.scala"         %% "scala-utils"            % "20150130.1-SNAPSHOT",
         "com.typesafe.scala-logging"    %% "scala-logging"          % "3.1.0",
         "ch.qos.logback"                %  "logback-classic"        % "1.1.2",
         "org.scalatest"                 %% "scalatest"              % "2.2.1"   % Test
